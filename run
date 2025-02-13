@@ -1,0 +1,37 @@
+#!/usr/bin/env nu
+
+def main (d: duration) {
+  if (ls --long | where name == "sowon" and mode =~ "x" | is-empty) {
+    print "Compiling..."
+    if (which make | is-empty) {
+      if (which nix | is-empty) {
+        print "Use nix, btw"
+        exit 1
+      } else {
+        nix develop -- make
+      }
+    } else {
+      make
+    }
+  }
+
+  clear
+  print $"Vuelvo en ($d)"
+  print $"Cum in ($d)"
+
+  let d_in_sec = $d / 1sec | into int;
+
+  try {
+    ./sowon $d_in_sec -e
+    clear
+    print "Yo volviendo ahora"
+    print "I cumming now"
+    ./sowon
+  } catch {
+    if (which nix | is-empty) {
+      print "You need nix to run this \"without\" installing dependencies"
+    } else {
+      nix develop -c ./run $d_in_sec
+    }
+  }
+}

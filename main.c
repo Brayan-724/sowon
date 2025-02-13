@@ -1,3 +1,5 @@
+#define PENGER
+
 #define _CRT_SECURE_NO_WARNINGS
 #include <assert.h>
 #include <stdio.h>
@@ -393,14 +395,24 @@ int main(int argc, char **argv)
 
             // TODO: support amount of hours >99
             const size_t hours = t / 60 / 60;
-            render_digit_at(renderer, digits, hours / 10,   wiggle_index      % WIGGLE_COUNT, &pen_x, &pen_y, user_scale, fit_scale);
-            render_digit_at(renderer, digits, hours % 10,  (wiggle_index + 1) % WIGGLE_COUNT, &pen_x, &pen_y, user_scale, fit_scale);
-            render_digit_at(renderer, digits, COLON_INDEX,  wiggle_index      % WIGGLE_COUNT, &pen_x, &pen_y, user_scale, fit_scale);
+            if (hours > 0) {
+                render_digit_at(renderer, digits, hours / 10,   wiggle_index      % WIGGLE_COUNT, &pen_x, &pen_y, user_scale, fit_scale);
+                render_digit_at(renderer, digits, hours % 10,  (wiggle_index + 1) % WIGGLE_COUNT, &pen_x, &pen_y, user_scale, fit_scale);
+                render_digit_at(renderer, digits, COLON_INDEX,  wiggle_index      % WIGGLE_COUNT, &pen_x, &pen_y, user_scale, fit_scale);
+            } else {
+                const int hours_width = (int) floorf((float) CHAR_WIDTH * user_scale * fit_scale * 1.5);
+                pen_x += hours_width;
+            }
 
             const size_t minutes = t / 60 % 60;
-            render_digit_at(renderer, digits, minutes / 10, (wiggle_index + 2) % WIGGLE_COUNT, &pen_x, &pen_y, user_scale, fit_scale);
-            render_digit_at(renderer, digits, minutes % 10, (wiggle_index + 3) % WIGGLE_COUNT, &pen_x, &pen_y, user_scale, fit_scale);
-            render_digit_at(renderer, digits, COLON_INDEX,  (wiggle_index + 1) % WIGGLE_COUNT, &pen_x, &pen_y, user_scale, fit_scale);
+            if (minutes > 0) {
+                render_digit_at(renderer, digits, minutes / 10, (wiggle_index + 2) % WIGGLE_COUNT, &pen_x, &pen_y, user_scale, fit_scale);
+                render_digit_at(renderer, digits, minutes % 10, (wiggle_index + 3) % WIGGLE_COUNT, &pen_x, &pen_y, user_scale, fit_scale);
+                render_digit_at(renderer, digits, COLON_INDEX,  (wiggle_index + 1) % WIGGLE_COUNT, &pen_x, &pen_y, user_scale, fit_scale);
+            } else {
+                const int minutes_width = (int) floorf((float) CHAR_WIDTH * user_scale * fit_scale * 1.5);
+                pen_x += minutes_width;
+            }
 
             const size_t seconds = t % 60;
             render_digit_at(renderer, digits, seconds / 10, (wiggle_index + 4) % WIGGLE_COUNT, &pen_x, &pen_y, user_scale, fit_scale);
